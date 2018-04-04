@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Wiki Search</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="style.css" type="text/css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Cinzel" rel="stylesheet">
+
+
+</head>
+<body>
+
+<div class="container">
+  <div id="main-heading">
+  <h1>Search Wikipedia For Top 10 Results</h1>
+</div>
+</div>
+
+
+<div class="container">
+  <div id="search">
+
+    <input type="text" id="wiki-search" onfocus="this.value=''"></input><br>
+    <button id="button">Search</button>
+
+  </div>
+</div>
+
+
+<!-- HERE IS WHERE THE RESULTS WILL GO -->
+<div class="container">
+  <div id="wiki-results"></div>
+
+</div>
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+
+  $(document).ready(function() {
+
+    $("button").click(function() {
+
+      $("#wiki-results").empty();
+      var userSearch = $("#wiki-search").val();
+      var apiKey = "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=" + userSearch;
+
+
+      $.ajax( {
+        type: "get",
+        url: apiKey,
+        async: false,
+        dataType: "Json",
+        success: function(data){
+
+        for(var i = data[1].length -1; i>=0; i--) {
+
+        //var linkAdress = data[3][i];
+
+       $("#wiki-results").prepend("<div class='well hoverClass'>" + "<span id='header'>" + data[1][i] + "</span>" + "<br>" + data[2][i] + "<br>" + "<span id='read-more'>" + '<a href="'+data[3][i]+'" target="_blank">' + "read more" + "</a>" + "</span>" + "</div>" );
+        }
+
+
+        },
+        error: function(errorMessage) {
+          alert("error: most likely browser cannot interact with api" );
+        },
+
+
+
+
+      });
+
+      //make wells hover
+      $(".hoverClass").hover(
+        function(){
+          $(this).css("font-size", "25px");
+          $(this).css("cursor", "pointer");
+        },
+
+        function(){
+          $(this).css("font-size", "");
+
+        }
+
+      );
+      //end of well style
+
+    });
+
+
+  });
+
+
+
+
+
+
+
+
+  </script>
+
+</body>
+</html>
